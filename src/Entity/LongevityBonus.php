@@ -18,4 +18,9 @@ class LongevityBonus implements Bonus
     {
         return $this->bonusAmount->multiply(min($yearsOfService, self::YEARS_OF_SERVICE_LIMIT));
     }
+
+    public function name(): string
+    {
+        return 'longevity';
+    }
 }
