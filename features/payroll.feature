@@ -21,3 +21,8 @@ Feature:
         When I display a payrolls with "employeeName" being "Adam Kowalski"
         Then I see 1 results
         And I see that "Adam Kowalski" is working in "HR" department
+
+    Scenario: It can be filtered by the department name
+        When I display a payrolls with "departmentName" being "Customer Service"
+        Then I see 1 results
+        And I see that "Ania Nowak" is working in "Customer Service" department
