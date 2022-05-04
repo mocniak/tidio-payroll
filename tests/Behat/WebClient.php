@@ -21,7 +21,6 @@ class WebClient
     {
         $request = Request::create($path, $method);
         $this->response = $this->kernel->handle($request);
-        var_dump($this->response->getContent());
     }
 
     public function getLatestResponseContent(): array

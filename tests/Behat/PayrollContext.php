@@ -11,6 +11,7 @@ use App\Entity\PercentBonus;
 use App\Repository\DepartmentRepository;
 use App\Repository\EmployeeRepository;
 use Behat\Behat\Context\Context;
+use Behat\Behat\Tester\Exception\PendingException;
 use Money\Money;
 use Webmozart\Assert\Assert;
 
@@ -68,6 +69,14 @@ final class PayrollContext implements Context
     }
 
     /**
+     * @When I display a payrolls with :filterName being :filterValue
+     */
+    public function iDisplayAPayrollsWithBeing(string $filterName, string $filterValue)
+    {
+        $this->webClient->fetch('/api/payroll?filter=' . $filterName . ':' . $filterValue);
+    }
+
+    /**
      * @Then I see :numberOfResults results
      */
     public function iSeeResults(int $numberOfResults)
@@ -82,7 +91,7 @@ final class PayrollContext implements Context
     {
         Assert::notEmpty(array_filter(
             $this->webClient->getLatestResponseContent(),
-            fn($row) => $row['name'] === $employeeName && $row['department'] === $departmentName
+            fn($row) => $row['employeeName'] === $employeeName && $row['departmentName'] === $departmentName
         ));
     }
 
@@ -94,9 +103,9 @@ final class PayrollContext implements Context
     {
         Assert::notEmpty(array_filter(
             $this->webClient->getLatestResponseContent(),
-            fn($row) => $row['name'] === $employeeName
+            fn($row) => $row['employeeName'] === $employeeName
                 && $row['bonusType'] === $bonusType
-                && $row['bonus'] === $bonusAmount->getAmount()
+                && $row['bonusSalary'] === $bonusAmount->getAmount()
                 && $row['totalSalary'] === $totalSalary->getAmount()
         ));
     }
