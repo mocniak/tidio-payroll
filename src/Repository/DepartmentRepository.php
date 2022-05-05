@@ -20,7 +20,8 @@ class DepartmentRepository
 
     public function getByName(string $departmentName): Department
     {
-        return array_values(array_filter($this->departments, function (Department $department) use ($departmentName) {return $departmentName === $department->name;
+        return array_values(array_filter($this->departments, function (Department $department) use ($departmentName) {
+            return $departmentName === $department->name;
         }))[0];
     }
 

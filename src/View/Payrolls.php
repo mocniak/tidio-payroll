@@ -4,5 +4,8 @@ namespace App\View;
 
 interface Payrolls
 {
-    public function listPayrolls(?PayrollFilter $filter): array;
+    /**
+     * @return Payroll[]
+     */
+    public function listPayrolls(?PayrollFilter $filter, ?PayrollOrder $order): array;
 }

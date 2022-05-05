@@ -17,7 +17,10 @@ class InMemoryPayrolls implements Payrolls
         $this->departmentRepository = $departmentRepository;
     }
 
-    public function listPayrolls(?PayrollFilter $filter): array
+    /**
+     * @inheritdoc
+     */
+    public function listPayrolls(?PayrollFilter $filter, ?PayrollOrder $order): array
     {
         $employees = $this->employeeRepository->findAll();
         $departmentRepository = $this->departmentRepository;
@@ -41,6 +44,13 @@ class InMemoryPayrolls implements Payrolls
                 $payrolls,
                 fn(Payroll $payroll) => $payroll->{$filter->field->value} === $filter->value
             ));
+        }
+
+        if (null !== $order) {
+            usort(
+                $payrolls,
+                fn($a, $b) => ($order->ascending ? 1 : -1) * ($a->{$order->type->value} <=> $b->{$order->type->value})
+            );
         }
 
         return $payrolls;

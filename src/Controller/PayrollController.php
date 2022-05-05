@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\View\PayrollFilter;
 use App\View\PayrollFilterType;
+use App\View\PayrollOrder;
+use App\View\PayrollOrderType;
 use App\View\Payrolls;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,11 +27,16 @@ class PayrollController
     public function __invoke(Request $request): Response
     {
         $filter = null;
-        if (null != $request->query->get('filter')) {
+        if (null !== $request->query->get('filter')) {
             $filterParams = explode(':', $request->query->get('filter'));
             $filter = new PayrollFilter(PayrollFilterType::from($filterParams[0]), $filterParams[1]);
         }
+        $order = null;
+        if (null !== $request->query->get('order')) {
+            $orderParams = explode(':', $request->query->get('order'));
+            $order = new PayrollOrder(PayrollOrderType::from($orderParams[0]), $orderParams[1] === 'ASC');
+        }
 
-        return new JsonResponse($this->payrolls->listPayrolls($filter));
+        return new JsonResponse($this->payrolls->listPayrolls($filter, $order));
     }
 }

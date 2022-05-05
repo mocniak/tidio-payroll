@@ -11,7 +11,6 @@ use App\Entity\PercentBonus;
 use App\Repository\DepartmentRepository;
 use App\Repository\EmployeeRepository;
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use Money\Money;
 use Webmozart\Assert\Assert;
 
@@ -61,7 +60,7 @@ final class PayrollContext implements Context
     }
 
     /**
-     * @When I display a payrolls
+     * @When I display payrolls
      */
     public function iDisplayAPayrolls()
     {
@@ -69,11 +68,19 @@ final class PayrollContext implements Context
     }
 
     /**
-     * @When I display a payrolls with :filterName being :filterValue
+     * @When I display payrolls filtered by :filterName being :filterValue
      */
     public function iDisplayAPayrollsWithBeing(string $filterName, string $filterValue)
     {
         $this->webClient->fetch('/api/payroll?filter=' . $filterName . ':' . $filterValue);
+    }
+
+    /**
+     * @When I display payrolls ordered by :orderKey :direction
+     */
+    public function iDisplayPayrollsOrderedBy(string $orderKey, string $direction)
+    {
+        $this->webClient->fetch('/api/payroll?order=' . $orderKey . ':' . $direction);
     }
 
     /**
@@ -111,6 +118,14 @@ final class PayrollContext implements Context
     }
 
     /**
+     * @Then I see that :nth result is :employeeName
+     */
+    public function iSeeThatNthResultIs(int $nth, string $employeeName)
+    {
+        Assert::eq($this->webClient->getLatestResponseContent()[$nth - 1]['employeeName'], $employeeName);
+    }
+
+    /**
      * @Transform /^(\d+)$/
      */
     public function castStringToNumber(string $string): int
@@ -124,5 +139,13 @@ final class PayrollContext implements Context
     public function castStringToDollars(string $string): Money
     {
         return Money::USD(str_replace('$', '', $string));
+    }
+
+    /**
+     * @Transform /^(\d+)(st|nd|rd|th)$/
+     */
+    public function castCardinalToNumber($cardinal, $remainder)
+    {
+        return intval($cardinal);
     }
 }
