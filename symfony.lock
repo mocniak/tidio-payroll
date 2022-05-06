@@ -20,11 +20,44 @@
     "doctrine/cache": {
         "version": "2.1.1"
     },
+    "doctrine/collections": {
+        "version": "1.6.8"
+    },
+    "doctrine/common": {
+        "version": "3.3.0"
+    },
     "doctrine/dbal": {
         "version": "3.3.6"
     },
     "doctrine/deprecations": {
         "version": "v0.5.3"
+    },
+    "doctrine/doctrine-bundle": {
+        "version": "2.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.4",
+            "ref": "ddddd8249dd55bbda16fa7a45bb7499ef6f8e90e"
+        },
+        "files": [
+            "config/packages/doctrine.yaml",
+            "src/Entity/.gitignore",
+            "src/Repository/.gitignore"
+        ]
+    },
+    "doctrine/doctrine-migrations-bundle": {
+        "version": "3.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.1",
+            "ref": "ee609429c9ee23e22d6fa5728211768f51ed2818"
+        },
+        "files": [
+            "config/packages/doctrine_migrations.yaml",
+            "migrations/.gitignore"
+        ]
     },
     "doctrine/event-manager": {
         "version": "1.1.1"
@@ -38,8 +71,17 @@
     "doctrine/lexer": {
         "version": "1.2.3"
     },
-    "egulias/email-validator": {
-        "version": "3.1.2"
+    "doctrine/migrations": {
+        "version": "3.5.0"
+    },
+    "doctrine/orm": {
+        "version": "2.12.2"
+    },
+    "doctrine/persistence": {
+        "version": "3.0.2"
+    },
+    "doctrine/sql-formatter": {
+        "version": "1.1.2"
     },
     "friends-of-behat/symfony-extension": {
         "version": "2.3",
@@ -241,6 +283,9 @@
     "symfony/deprecation-contracts": {
         "version": "v3.0.1"
     },
+    "symfony/doctrine-bridge": {
+        "version": "v6.0.8"
+    },
     "symfony/doctrine-messenger": {
         "version": "v6.0.8"
     },
@@ -313,18 +358,6 @@
     },
     "symfony/intl": {
         "version": "v6.0.8"
-    },
-    "symfony/mailer": {
-        "version": "6.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "4.3",
-            "ref": "97a61eabb351d7f6cb7702039bcfe07fe9d7e03c"
-        },
-        "files": [
-            "config/packages/mailer.yaml"
-        ]
     },
     "symfony/maker-bundle": {
         "version": "1.40",
