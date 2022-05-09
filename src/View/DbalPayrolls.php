@@ -13,6 +13,7 @@ class DbalPayrolls implements Payrolls
         'departmentName' => 'd.name',
         'employeeName' => 'e.name',
     ];
+
     private Connection $connection;
 
     public function __construct(Connection $connection)
@@ -33,22 +34,12 @@ class DbalPayrolls implements Payrolls
             ->leftJoin('e', 'departments', 'd', 'e.departmentId = d.id');
 
         if (null !== $filter) {
-
             $queryBuilder
                 ->where(self::FILTER_TO_COLUMN_MAP[$filter->field->value] . ' = :value')
                 ->setParameter('value', $filter->value);
         }
-//
-//        if (null !== $order) {
-//            usort(
-//                $payrolls,
-//                fn($a, $b) => ($order->ascending ? 1 : -1) * ($a->{$order->type->value} <=> $b->{$order->type->value})
-//            );
-//        }
 
-        $results = $queryBuilder->fetchAllAssociative();
-
-        return (array_map(function (array $row) {
+        $payrolls = array_map(function (array $row) {
             $yearsOfService = (new \DateTimeImmutable('now'))->diff(new \DateTimeImmutable($row['hireDate']))->y;
             $baseSalary = new Money($row['baseSalary_amount'], new Currency($row['baseSalary_currency']));
             $bonus = unserialize($row['serializedBonus']);
@@ -61,6 +52,15 @@ class DbalPayrolls implements Payrolls
                 $bonus,
                 $baseSalary->add($bonusSalary)
             );
-        }, $results));
+        }, $queryBuilder->fetchAllAssociative());
+
+        if (null !== $order) {
+            usort(
+                $payrolls,
+                fn($a, $b) => ($order->ascending ? 1 : -1) * ($a->{$order->type->value} <=> $b->{$order->type->value})
+            );
+        }
+
+        return $payrolls;
     }
 }
