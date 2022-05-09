@@ -25,4 +25,12 @@ create-schema:
 	docker-compose exec payroll-php bash -c "bin/console doctrine:database:create --env=test"
 	docker-compose exec payroll-php bash -c "bin/console doctrine:schema:create --env=test"
 	docker-compose exec payroll-php bash -c "bin/console doctrine:schema:update --env=test --force"
- 	docker-compose exec payroll-php bash -c "bin/console app:import-example-data"
+
+.PHONY: import-example-data
+import-example-data:
+	docker-compose exec payroll-php bash -c "bin/console app:import-example-data"
+
+.PHONY: setup-database
+setup-database:
+	make create-schema
+	make import-example-data

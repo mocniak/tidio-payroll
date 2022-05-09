@@ -16,20 +16,12 @@ RUN apt-get update \
 
 COPY --chown=www-data:www-data --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug \
-    && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
 WORKDIR /payroll
 
 USER www-data:www-data
 
 COPY --chown=www-data:www-data composer.* ./
-
 RUN composer install \
     --no-scripts \
-    --no-interaction \
-    --optimize-autoloader
-
+    --no-interaction
 COPY --chown=www-data:www-data . ./

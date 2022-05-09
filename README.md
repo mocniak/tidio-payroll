@@ -8,12 +8,12 @@ The project is dockerized and configured to work with docker-compose
 
 - build the project with `docker-compose build`
 - run the container with `docker-compose up -d`
-- get to the container with `docker-compose exec payroll-php bash`
+- create schema and import example data with `make setup-database`
 - the app should be accessible after a moment at `http://localhost:8081`
 
 ## Tests
-- behat: `APP_ENV=test vendor/bin/behat` in php container
-- unit: `vendor/bin/phpunit` in php container
+- behat: `make behat`
+- unit: `make unit` in php container
 
 ## TODOs
 
