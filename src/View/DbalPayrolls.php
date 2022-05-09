@@ -8,6 +8,11 @@ use Money\Money;
 
 class DbalPayrolls implements Payrolls
 {
+    // get values of PayrollFilterTypes and map them to columns in DB
+    const FILTER_TO_COLUMN_MAP = [
+        'departmentName' => 'd.name',
+        'employeeName' => 'e.name',
+    ];
     private Connection $connection;
 
     public function __construct(Connection $connection)
@@ -27,11 +32,12 @@ class DbalPayrolls implements Payrolls
             ->from('employees', 'e')
             ->leftJoin('e', 'departments', 'd', 'e.departmentId = d.id');
 
-//        if (null !== $filter) {
-//            $queryBuilder
-//                ->where(':filterColumn = :value')
-//                ->setParameter('filterColumn',$filter->field->value);
-//        }
+        if (null !== $filter) {
+
+            $queryBuilder
+                ->where(self::FILTER_TO_COLUMN_MAP[$filter->field->value] . ' = :value')
+                ->setParameter('value', $filter->value);
+        }
 //
 //        if (null !== $order) {
 //            usort(
