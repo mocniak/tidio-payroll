@@ -19,9 +19,10 @@ test:
 	make phpunit
 
 .PHONY: create-schema
-    docker-compose exec payroll-php bash -c "bin/console doctrine:schema:create --env=dev" \
-    docker-compose exec payroll-php bash -c "bin/console doctrine:schema:update --env=dev --force" \
-    docker-compose exec payroll-php bash -c "bin/console doctrine:database:create --env=test" \
-    docker-compose exec payroll-php bash -c "bin/console doctrine:schema:create --env=test" \
-    docker-compose exec payroll-php bash -c "bin/console doctrine:schema:update --env=test --force" \
-    docker-compose exec payroll-php bash -c "bin/console app:import-example-data"
+create-schema:
+	docker-compose exec payroll-php bash -c "bin/console doctrine:schema:create --env=dev"
+	docker-compose exec payroll-php bash -c "bin/console doctrine:schema:update --env=dev --force"
+	docker-compose exec payroll-php bash -c "bin/console doctrine:database:create --env=test"
+	docker-compose exec payroll-php bash -c "bin/console doctrine:schema:create --env=test"
+	docker-compose exec payroll-php bash -c "bin/console doctrine:schema:update --env=test --force"
+ 	docker-compose exec payroll-php bash -c "bin/console app:import-example-data"
