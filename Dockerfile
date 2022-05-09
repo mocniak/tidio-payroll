@@ -20,8 +20,3 @@ WORKDIR /payroll
 
 USER www-data:www-data
 
-COPY --chown=www-data:www-data composer.* ./
-RUN composer install \
-    --no-scripts \
-    --no-interaction
-COPY --chown=www-data:www-data . ./

@@ -64,7 +64,7 @@ class ImportExampleDataCommand extends Command
                 Money::USD($employee[1])
             ));
         }
-        $output->write('[OK] Example employees and departments imported.');
+        $output->write('[OK] Example employees and departments imported.' . PHP_EOL);
 
         return Command::SUCCESS;
     }

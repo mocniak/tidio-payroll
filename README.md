@@ -8,7 +8,7 @@ The project is dockerized and configured to work with docker-compose
 
 - build the project with `docker-compose build`
 - run the container with `docker-compose up -d`
-- create schema and import example data with `make setup-database`
+- install dependencies, create schema and import example data with `make setup-app`
 - the app should be accessible after a moment at `http://localhost:8081`
 
 ## Tests

@@ -29,8 +29,11 @@ create-schema:
 .PHONY: import-example-data
 import-example-data:
 	docker-compose exec payroll-php bash -c "bin/console app:import-example-data"
-
-.PHONY: setup-database
-setup-database:
+.PHONY: composer-install
+composer-install:
+	docker-compose exec payroll-php bash -c "composer install"
+.PHONY: setup-app
+setup-app:
+	make composer-install
 	make create-schema
 	make import-example-data
