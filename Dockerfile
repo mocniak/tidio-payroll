@@ -24,3 +24,9 @@ RUN pecl install xdebug \
 WORKDIR /payroll
 
 USER www-data:www-data
+RUN docker-compose exec payroll-php bash -c "bin/console doctrine:schema:create --env=dev" \
+    && docker-compose exec payroll-php bash -c "bin/console doctrine:schema:update --env=dev --force" \
+    && bin/console doctrine:database:create --env=test \
+    && bin/console doctrine:schema:create --env=test \
+    && bin/console doctrine:schema:update --env=test --force \
+    && bin/console app:import-example-data
