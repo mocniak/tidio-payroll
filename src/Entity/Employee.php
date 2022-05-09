@@ -7,6 +7,7 @@ use Money\Money;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="employees")
  */
 class Employee
 {

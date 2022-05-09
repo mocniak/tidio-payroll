@@ -22,32 +22,15 @@ class DbalPayrolls implements Payrolls
     {
         $queryBuilder = $this->connection->createQueryBuilder();
 
-        $results = $queryBuilder
-            ->select('e.name, d.name as department_name, e.hire_date, e.base_salary_amount, e.base_salary_currency, d.serialized_bonus')
-            ->from('employee', 'e')
-            ->leftJoin('e', 'department', 'd', 'e.department_id = d.id')
-            ->fetchAllAssociative();
+        $queryBuilder
+            ->select('e.name, d.name as departmentName, e.hireDate, e.baseSalary_amount, e.baseSalary_currency, d.serializedBonus')
+            ->from('employees', 'e')
+            ->leftJoin('e', 'departments', 'd', 'e.departmentId = d.id');
 
-        $payrolls = (array_map(function (array $row) {
-            $yearsOfService = (new \DateTimeImmutable('now'))->diff(new \DateTimeImmutable($row['hire_date']))->y;
-            $baseSalary = new Money($row['base_salary_amount'], new Currency($row['base_salary_currency']));
-            $bonus = unserialize($row['serialized_bonus']);
-            $bonusSalary = $bonus->calculate($baseSalary, $yearsOfService);
-            return new Payroll(
-                $row['name'],
-                $row['department_name'],
-                $baseSalary,
-                $bonusSalary,
-                $bonus,
-                $baseSalary->add($bonusSalary)
-            );
-        }, $results));
-//
 //        if (null !== $filter) {
-//            $payrolls = array_values(array_filter(
-//                $payrolls,
-//                fn(Payroll $payroll) => $payroll->{$filter->field->value} === $filter->value
-//            ));
+//            $queryBuilder
+//                ->where(':filterColumn = :value')
+//                ->setParameter('filterColumn',$filter->field->value);
 //        }
 //
 //        if (null !== $order) {
@@ -56,7 +39,22 @@ class DbalPayrolls implements Payrolls
 //                fn($a, $b) => ($order->ascending ? 1 : -1) * ($a->{$order->type->value} <=> $b->{$order->type->value})
 //            );
 //        }
-//
-        return $payrolls;
+
+        $results = $queryBuilder->fetchAllAssociative();
+
+        return (array_map(function (array $row) {
+            $yearsOfService = (new \DateTimeImmutable('now'))->diff(new \DateTimeImmutable($row['hireDate']))->y;
+            $baseSalary = new Money($row['baseSalary_amount'], new Currency($row['baseSalary_currency']));
+            $bonus = unserialize($row['serializedBonus']);
+            $bonusSalary = $bonus->calculate($baseSalary, $yearsOfService);
+            return new Payroll(
+                $row['name'],
+                $row['departmentName'],
+                $baseSalary,
+                $bonusSalary,
+                $bonus,
+                $baseSalary->add($bonusSalary)
+            );
+        }, $results));
     }
 }
