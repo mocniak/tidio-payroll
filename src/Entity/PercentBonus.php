@@ -15,7 +15,7 @@ class PercentBonus implements Bonus
 
     public function calculate(Money $baseSalary, int $yearsOfService): Money
     {
-        return $baseSalary->multiply(0.01 * $this->amountInPercents);
+        return $baseSalary->multiply((string)(0.01 * $this->amountInPercents));
     }
 
     public function name(): string

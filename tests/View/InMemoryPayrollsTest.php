@@ -5,8 +5,8 @@ namespace App\Tests\View;
 use App\Entity\Department;
 use App\Entity\Employee;
 use App\Entity\PercentBonus;
-use App\Repository\DepartmentRepository;
-use App\Repository\EmployeeRepository;
+use App\Repository\InMemoryDepartmentRepository;
+use App\Repository\InMemoryEmployeeRepository;
 use App\View\InMemoryPayrolls;
 use App\View\Payroll;
 use App\View\PayrollFilter;
@@ -23,8 +23,8 @@ class InMemoryPayrollsTest extends TestCase
      */
     public function testFilteringPayrolls(array $employees, array $filter, array $expectedEmployees)
     {
-        $employeeRepository = new EmployeeRepository();
-        $departmentRepository = new DepartmentRepository();
+        $employeeRepository = new InMemoryEmployeeRepository();
+        $departmentRepository = new InMemoryDepartmentRepository();
         $departmentRepository->add(new Department('Department 1', new PercentBonus(0)));
         $departmentRepository->add(new Department('Department 2', new PercentBonus(0)));
         foreach ($employees as $employee) {
@@ -38,7 +38,7 @@ class InMemoryPayrollsTest extends TestCase
         $payrolls = new InMemoryPayrolls($employeeRepository, $departmentRepository);
         $this->assertEquals($expectedEmployees, array_map(function (Payroll $payroll) {
             return $payroll->employeeName;
-        }, $payrolls->listPayrolls(count($filter) === 0 ? null : new PayrollFilter($filter[0], $filter[1]))));
+        }, $payrolls->listPayrolls(count($filter) === 0 ? null : new PayrollFilter($filter[0], $filter[1]), null)));
     }
 
     public function filterProvider(): array
@@ -81,8 +81,8 @@ class InMemoryPayrollsTest extends TestCase
      */
     public function testOrderingPayrolls(PayrollOrderType $orderType, bool $ascending, array $expectedEmployees)
     {
-        $employeeRepository = new EmployeeRepository();
-        $departmentRepository = new DepartmentRepository();
+        $employeeRepository = new InMemoryEmployeeRepository();
+        $departmentRepository = new InMemoryDepartmentRepository();
         $departmentRepository->add(new Department('Department 1', new PercentBonus(0)));
         $departmentRepository->add(new Department('Department 2', new PercentBonus(0)));
         $employees = [

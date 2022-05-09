@@ -3,15 +3,15 @@
 namespace App\View;
 
 use App\Entity\Employee;
-use App\Repository\DepartmentRepository;
-use App\Repository\EmployeeRepository;
+use App\Repository\InMemoryDepartmentRepository;
+use App\Repository\InMemoryEmployeeRepository;
 
 class InMemoryPayrolls implements Payrolls
 {
-    private EmployeeRepository $employeeRepository;
-    private DepartmentRepository $departmentRepository;
+    private InMemoryEmployeeRepository $employeeRepository;
+    private InMemoryDepartmentRepository $departmentRepository;
 
-    public function __construct(EmployeeRepository $employeeRepository, DepartmentRepository $departmentRepository)
+    public function __construct(InMemoryEmployeeRepository $employeeRepository, InMemoryDepartmentRepository $departmentRepository)
     {
         $this->employeeRepository = $employeeRepository;
         $this->departmentRepository = $departmentRepository;
@@ -28,13 +28,13 @@ class InMemoryPayrolls implements Payrolls
             $department = $departmentRepository->get($employee->departmentId);
             $yearsOfService = (new \DateTimeImmutable('now'))->diff($employee->hireDate)->y;
             $baseSalary = $employee->baseSalary;
-            $bonusSalary = $department->bonus->calculate($employee->baseSalary, $yearsOfService);
+            $bonusSalary = $department->bonus()->calculate($employee->baseSalary, $yearsOfService);
             return new Payroll(
                 $employee->name,
                 $department->name,
                 $baseSalary,
                 $bonusSalary,
-                $department->bonus,
+                $department->bonus(),
                 $baseSalary->add($bonusSalary)
             );
         }, $employees));

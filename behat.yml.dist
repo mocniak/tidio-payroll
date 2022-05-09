@@ -5,4 +5,5 @@ default:
                 - App\Tests\Behat\PayrollContext
 
     extensions:
-        FriendsOfBehat\SymfonyExtension: null
+        FriendsOfBehat\SymfonyExtension:
+            bootstrap: tests/bootstrap.php

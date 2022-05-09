@@ -20,8 +20,11 @@ final class PayrollContext implements Context
     private DepartmentRepository $departmentRepository;
     private EmployeeRepository $employeeRepository;
 
-    public function __construct(WebClient $webClient, DepartmentRepository $departmentRepository,
-        EmployeeRepository $employeeRepository)
+    public function __construct(
+        WebClient $webClient,
+        DepartmentRepository $departmentRepository,
+        EmployeeRepository $employeeRepository
+    )
     {
         $this->webClient = $webClient;
         $this->departmentRepository = $departmentRepository;
@@ -29,10 +32,21 @@ final class PayrollContext implements Context
     }
 
     /**
+     * @BeforeScenario
+     */
+    public function cleanDB($event)
+    {
+        $this->departmentRepository->removeAll();
+        $this->employeeRepository->removeAll();
+    }
+    /**
      * @Given there is a :departmentName department having :bonusType bonus of :bonusAmount
      */
-    public function thereIsADepartmentHavingBonusOf(string $departmentName, string $bonusType,
-        string|Money $bonusAmount)
+    public function thereIsADepartmentHavingBonusOf(
+        string $departmentName,
+        string $bonusType,
+        string|Money $bonusAmount
+    )
     {
         if ($bonusType === "percentage") {
             $bonus = new PercentBonus((int)str_replace('%', '', $bonusAmount));
@@ -138,7 +152,7 @@ final class PayrollContext implements Context
      */
     public function castStringToDollars(string $string): Money
     {
-        return Money::USD(str_replace('$', '', $string));
+        return Money::USD((int)(str_replace('$', '', $string)) * 100);
     }
 
     /**

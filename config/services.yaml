@@ -24,5 +24,7 @@ services:
         tags:
             - 'controller.service_arguments'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    # interfaces
+    App\Repository\EmployeeRepository: '@App\Repository\DoctrineEmployeeRepository'
+    App\Repository\DepartmentRepository: '@App\Repository\DoctrineDepartmentRepository'
+    App\View\Payrolls: '@App\View\DbalPayrolls'
